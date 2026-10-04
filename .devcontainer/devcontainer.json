@@ -1,0 +1,34 @@
+{
+  "name": "QualiCart Laravel Dev",
+
+  "dockerComposeFile": "docker-compose.yml",
+
+  "service": "app",
+
+  "workspaceFolder": "/workspaces/qualicart",
+
+  "forwardPorts": [
+    8000,
+    3306
+  ],
+
+  "portsAttributes": {
+    "8000": {
+      "label": "QualiCart Laravel",
+      "onAutoForward": "openPreview"
+    },
+    "3306": {
+      "label": "MariaDB"
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "22"
+    }
+  },
+
+  "postCreateCommand": "php -v && composer --version && node -v && npm -v",
+
+  "remoteUser": "vscode"
+}

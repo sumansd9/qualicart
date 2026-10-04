@@ -1,0 +1,56 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      - ..:/workspaces/qualicart:cached
+
+    command: sleep infinity
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - qualicart-network
+
+
+  db:
+    image: mariadb:11.4
+
+    restart: unless-stopped
+
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: qualicart
+      MARIADB_USER: qualicart
+      MARIADB_PASSWORD: qualicart
+
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - qualicart-network
+
+
+volumes:
+  mariadb-data:
+
+
+networks:
+  qualicart-network:
